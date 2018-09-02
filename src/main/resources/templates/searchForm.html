@@ -1,0 +1,90 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.js"> </script>
+    <script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"> </script>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
+
+    <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/autoComplete.min.js"></script>
+</head>
+<body>
+<script>
+    $(document).ready(function() {
+        $(function() {
+            $("#source").autocomplete({
+                source: function(request, response) {
+                    $.ajax({
+                        url: "/travel/autosuggest/cities",
+                        type: "POST",
+                        data: { term: request.term },
+
+                        dataType: "json",
+
+                        success: function(data) {
+                            response($.map(data, function(v,i){
+                                return {
+                                    label: v.name,
+                                    value: v.code
+                                };
+                            }));
+                        }
+                    });
+                }
+            });
+        });
+    });
+
+    $(document).ready(function() {
+        $(function() {
+            $("#destination").autocomplete({
+                source: function(request, response) {
+                    $.ajax({
+                        url: "/travel/autosuggest/cities",
+                        type: "POST",
+                        data: { term: request.term },
+
+                        dataType: "json",
+
+                        success: function(data) {
+                            response($.map(data, function(v,i){
+                                return {
+                                    label: v.name,
+                                    value: v.code
+                                };
+                            }));
+                        }
+                    });
+                }
+            });
+        });
+    });
+</script>
+
+
+<div th:if="${message}">
+    <h2 th:text="${message}"/>
+</div>
+
+<div>
+    <form method="POST" action="/travel/search">
+        <table>
+            <tr>
+                <td>Source</td><td><input type="text" name="source" id="source"/></td>
+                <td>Destination</td><td><input type="text" name="destination" id="destination" /></td>
+                <td><input type="submit" value="Search" /></td>
+            </tr>
+        </table>
+    </form>
+</div>
+
+<div th:if="${searchResult}">
+    <table>
+    <tr>
+        <td th:text="${searchResult.source}">Source</td>
+        <td th:text="${searchResult.destination}">Destination</td>
+        <td th:text="${searchResult.price}">Price</td>
+    </tr>
+    </table>
+</div>
+
+</body>
+</html>

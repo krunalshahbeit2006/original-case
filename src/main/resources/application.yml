@@ -1,3 +1,7 @@
 server:
     port: 9000
     contextPath: /travel
+
+service:
+    accessToken: f489e2f3-20e6-4fbd-92f3-202a842fad06
+    mockurl: http://localhost:8080/
